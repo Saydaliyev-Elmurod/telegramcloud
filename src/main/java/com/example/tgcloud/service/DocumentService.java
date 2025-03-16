@@ -7,11 +7,9 @@ import com.example.tgcloud.enums.FileType;
 import com.example.tgcloud.enums.UserStep;
 import com.example.tgcloud.model.DocumentEntity;
 import com.example.tgcloud.repository.DocumentRepository;
-import com.example.tgcloud.repository.UserRepository;
 import com.example.tgcloud.util.ButtonUtil;
 import com.example.tgcloud.util.MessageUtil;
 import com.example.tgcloud.util.Util;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,17 +19,18 @@ import java.util.List;
 
 @Service
 public class DocumentService {
-    @Autowired
-    private DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
     @Lazy
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private MessageUtil messageUtil;
-    @Autowired
-    private ButtonUtil buttonUtil;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final MessageUtil messageUtil;
+    private final ButtonUtil buttonUtil;
+
+    public DocumentService(final ButtonUtil buttonUtil, final DocumentRepository documentRepository, @Lazy final UserService userService, final MessageUtil messageUtil) {
+        this.buttonUtil = buttonUtil;
+        this.documentRepository = documentRepository;
+        this.userService = userService;
+        this.messageUtil = messageUtil;
+    }
 
     public void saveDocument(DocumentDTO dto) {
         DocumentEntity entity = new DocumentEntity();
@@ -55,7 +54,7 @@ public class DocumentService {
         if (dto.getFolderId() == null) {
             back = false;
         }
-        String name = null;
+        String name;
 
         if (folder == null) {
             name = "My Telegram Cloud";
@@ -73,10 +72,7 @@ public class DocumentService {
 
     public void sendButton(UserDTO dto) {
         DocumentEntity folder = documentRepository.getCurrentFolder(dto.getId(), dto.getFolderId());
-        Boolean back = true;
-        if (dto.getFolderId() == null) {
-            back = false;
-        }
+        boolean back = dto.getFolderId() != null;
         Page<DocumentEntity> documentList = documentRepository.getByUserIdAndFolderId(dto.getId(), dto.getFolderId(), Util.pageableDocument(dto));
         messageUtil.sendMsg(dto.getUserId(), folder == null ? "" : folder.getName(),
                 buttonUtil.replyButton(toList(documentList.getContent()), documentList.hasNext(), documentList.hasPrevious(), back), documentList.getTotalElements(), documentList.getPageable().getPageNumber());
@@ -84,17 +80,10 @@ public class DocumentService {
 
     public void editButton(UserDTO dto) {
         DocumentEntity folder = documentRepository.getCurrentFolder(dto.getId(), dto.getFolderId());
-        Boolean back = true;
-        if (dto.getFolderId() == null) {
-            back = false;
-        }
+        boolean back = dto.getFolderId() != null;
         Page<DocumentEntity> documentList = documentRepository.getByUserIdAndFolderId(dto.getId(), dto.getFolderId(), Util.pageableDocument(dto));
         messageUtil.editMsg(dto.getUserId(), dto.getCurrentMessageId(), folder == null ? "" : folder.getName(),
                 buttonUtil.replyButton(toList(documentList.getContent()), documentList.hasNext(), documentList.hasPrevious(), back), documentList.getTotalElements(), documentList.getPageable().getPageNumber());
-    }
-
-    public List<DocumentEntity> getDocList(Long u_id) {
-        return documentRepository.getDoc(u_id);
     }
 
 

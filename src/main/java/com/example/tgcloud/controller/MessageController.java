@@ -19,10 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @AllArgsConstructor
 public class MessageController {
     @Lazy
-    private final MyTelegramBot myTelegramBot;
     private final UserService userService;
-    private final ButtonUtil buttonUtil;
-    private final MessageUtil messageUtil;
     private final DocumentController documentController;
     private final DocumentService documentService;
 

@@ -27,10 +27,6 @@ public class Util {
         return PageRequest.of(dto.getCurrentDecimalDoc() - 1, size, sort);
     }
 
-    public static String getFolder(String text) {
-        text = text.substring(0, text.length() - 1);
-        return text.substring(text.lastIndexOf("/") + 1);
-    }
 
     public static String duration(Integer duration) {
         if (duration < 3600) {
@@ -41,17 +37,15 @@ public class Util {
     }
 
     public static String fileSize(Long fileSizeBayt) {
-        DecimalFormat decfor = new DecimalFormat("0.00");
+        DecimalFormat format = new DecimalFormat("0.00");
 
         Double d = Double.valueOf(fileSizeBayt);
         if (fileSizeBayt < 1024) {
             return fileSizeBayt + " bayt";
         } else if (fileSizeBayt < 1024 * 1024) {
-            return decfor.format(d / 1024) + " KB";
+            return format.format(d / 1024) + " KB";
         } else if (fileSizeBayt < 1024 * 1024 * 1024) {
-            return decfor.format(d / 1024 / 1024) + " MB";
-        } else if (fileSizeBayt < 1024 * 1024 * 1024 * 1024) {
-            return decfor.format(d / 1024 / 1024 / 1024) + " GB";
+            return format.format(d / 1024 / 1024) + " MB";
         } else {
             return String.valueOf(fileSizeBayt);
         }

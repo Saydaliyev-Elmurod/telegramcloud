@@ -27,7 +27,7 @@ public class InlineQueryController {
     public void start(Update update) {
         InlineQuery inlineQuery = update.getInlineQuery();
         Long userId = inlineQuery.getFrom().getId();
-        if(inlineQuery.getQuery().length()>0){
+        if(!inlineQuery.getQuery().isEmpty()){
             sendInlineQueryToUser(userId,inlineQuery.getId(),inlineQuery.getQuery());
         }
     }

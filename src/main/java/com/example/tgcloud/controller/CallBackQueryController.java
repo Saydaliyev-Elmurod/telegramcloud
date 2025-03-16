@@ -18,7 +18,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class CallBackQueryController {
     private final UserService userService;
     private final DocumentService documentService;
-    private final MyTelegramBot myTelegramBot;
     private final MessageUtil messageUtil;
 
     public void start(Update update) {

@@ -17,9 +17,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 
 @Component
 public class MessageUtil {
-    @Autowired
-    @Lazy
-    private MyTelegramBot myTelegramBot;
+    private final MyTelegramBot myTelegramBot;
+
+    public MessageUtil(@Lazy final MyTelegramBot myTelegramBot) {
+        this.myTelegramBot = myTelegramBot;
+    }
 
     public void sendMsg(Long userId, String text) {
         SendMessage message = new SendMessage();
@@ -99,7 +101,7 @@ public class MessageUtil {
            editMessageText.setReplyMarkup(keyboard);
            editMessageText.setMessageId(msgId);
            myTelegramBot.send(editMessageText);
-       }catch (BadRequestException e){
+       }catch (BadRequestException ignored){
 
        }
     }

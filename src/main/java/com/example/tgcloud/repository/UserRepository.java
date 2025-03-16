@@ -15,17 +15,17 @@ public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     @Transactional
     @Modifying
     @Query("update UserEntity set folderId=:folderId where id=:userId")
-    int updateUserFolder(@Param("folderId") Integer folderId, @Param("userId") Integer userId);
+    void updateUserFolder(@Param("folderId") Integer folderId, @Param("userId") Integer userId);
     @Transactional
     @Modifying
     @Query("update UserEntity set step=:step where id=:userId")
-    int updateUserStep(@Param("step") UserStep step, @Param("userId") Integer userId);
+    void updateUserStep(@Param("step") UserStep step, @Param("userId") Integer userId);
     @Transactional
     @Modifying
     @Query("update UserEntity set currentDecimalDoc=:decimal where id=:userId")
-    int updateUserDecimal(@Param("decimal") Integer decimal, @Param("userId") Integer userId);
+    void updateUserDecimal(@Param("decimal") Integer decimal, @Param("userId") Integer userId);
     @Transactional
     @Modifying
     @Query("update UserEntity set sortType=:type where id=:userId")
-    int updateUserSortType(@Param("type") SortType type, @Param("userId") Integer userId);
+    void updateUserSortType(@Param("type") SortType type, @Param("userId") Integer userId);
 }

@@ -19,7 +19,6 @@ public class UserService {
     private final UserRepository repository;
     private final DocumentRepository documentRepository;
     private final DocumentService documentService;
-    private final ButtonUtil buttonUtil;
     public UserDTO getUser(Long userId) {
         UserEntity entity = repository.findByUserId(userId);
         if (entity == null) return null;

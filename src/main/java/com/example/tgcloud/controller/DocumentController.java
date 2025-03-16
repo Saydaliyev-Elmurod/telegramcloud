@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class DocumentController {
     private final MessageUtil messageUtil;
     private final DocumentService documentService;
+
     public void saveDocument(Message message, UserDTO userDTO, FileType type) {
         DocumentDTO document = new DocumentDTO();
         document.setUserId(userDTO.getId());
@@ -30,32 +31,18 @@ public class DocumentController {
         document.setType(type);
         document.setMessageId(message.getMessageId());
         document.setCreatedDate(LocalDateTime.now());
-        if (message.getCaption() != null){
-            String caption = message.getCaption().length()>498?message.getCaption().substring(0,498):message.getCaption();
+        if (message.getCaption() != null) {
+            String caption = message.getCaption().length() > 498 ? message.getCaption().substring(0, 498) : message.getCaption();
             document.setContent(Util.getAdv(caption));
         }
         switch (type) {
             case VIDEO -> {
                 Video video = message.getVideo();
-                if (documentService.getByName(video.getFileName(), userDTO.getFolderId()) != null) {
-                    messageUtil.sendMsg(userDTO.getUserId(), "This file already exist this folder");
-                }
-                document.setFileId(video.getFileId());
-                document.setDuration(Util.duration(video.getDuration()));
-                if (video.getFileName() == null) document.setName(video.getFileId());
-                else document.setName(video.getFileName());
-                document.setSize(Util.fileSize(video.getFileSize()));
+                getDocument(userDTO, document, video.getFileName(), video.getFileId(), video.getDuration(), video.getFileSize());
             }
             case AUDIO -> {
                 Audio audio = message.getAudio();
-                if (documentService.getByName(audio.getFileName(), userDTO.getFolderId()) != null) {
-                    messageUtil.sendMsg(userDTO.getUserId(), "This file already exist this folder");
-                }
-                document.setFileId(audio.getFileId());
-                document.setDuration(Util.duration(audio.getDuration()));
-                if (audio.getFileName() == null) document.setName(audio.getFileId());
-                else document.setName(audio.getFileName());
-                document.setSize(Util.fileSize(audio.getFileSize()));
+                getDocument(userDTO, document, audio.getFileName(), audio.getFileId(), audio.getDuration(), audio.getFileSize());
             }
             case DOCUMENT -> {
                 Document doc = message.getDocument();
@@ -78,9 +65,19 @@ public class DocumentController {
         messageUtil.deleteMsg(message.getMessageId(), userDTO.getUserId());
     }
 
+    private void getDocument(final UserDTO userDTO, final DocumentDTO document, final String fileName, final String fileId, final Integer duration, final Long fileSize) {
+        if (documentService.getByName(fileName, userDTO.getFolderId()) != null) {
+            messageUtil.sendMsg(userDTO.getUserId(), "This file already exist this folder");
+        }
+        document.setFileId(fileId);
+        document.setDuration(Util.duration(duration));
+        if (fileName == null) document.setName(fileId);
+        else document.setName(fileName);
+        document.setSize(Util.fileSize(fileSize));
+    }
+
     public void createFolder(UserDTO dto, String folder, String parent) {
         DocumentDTO folderDto = new DocumentDTO();
         folderDto.setName(folder);
-
     }
 }

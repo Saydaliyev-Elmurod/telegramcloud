@@ -42,7 +42,7 @@ public class ButtonUtil {
             row2.add(button("◀️", "prev"));
         }
         row2.add(button("➕", "createFolder"));
-        row2.add(queryButton("\uD83D\uDD0E"));
+        row2.add(queryButton());
         if (haveNext) {
             row2.add(button("▶️", "next"));
         }
@@ -57,25 +57,22 @@ public class ButtonUtil {
         button.setCallbackData(callbackData);
         return button;
     }
-    private InlineKeyboardButton queryButton(String text) {
+    private InlineKeyboardButton queryButton() {
         InlineKeyboardButton button = new InlineKeyboardButton();
-        button.setText(text);
+        button.setText("\uD83D\uDD0E");
         button.setSwitchInlineQueryCurrentChat("");
         return button;
     }
 
 
     private List<InlineKeyboardButton> row(InlineKeyboardButton... inlineKeyboardButtons) {
-        List<InlineKeyboardButton> row = new LinkedList<>();
-        row.addAll(Arrays.asList(inlineKeyboardButtons));
-        return row;
+        return new LinkedList<>(Arrays.asList(inlineKeyboardButtons));
     }
 
 
+    @SafeVarargs
     private List<List<InlineKeyboardButton>> rowList(List<InlineKeyboardButton>... rows) {
-        List<List<InlineKeyboardButton>> collection = new LinkedList<>();
-        collection.addAll(Arrays.asList(rows));
-        return collection;
+        return new LinkedList<>(Arrays.asList(rows));
     }
 
 
