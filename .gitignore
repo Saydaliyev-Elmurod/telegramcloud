@@ -4,9 +4,10 @@
 .gradle
 /build/
 /bin/
-logs
+logs/
 
 /files
+.idea/
 
 # Ignore Gradle GUI config
 gradle-app.setting
